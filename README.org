@@ -1,0 +1,71 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: README
+#+DATE: <2020-07-31 Fri>
+#+AUTHOR: Aviad Reich
+#+EMAIL: aviad@localhost.localdomain
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 26.3 (Org mode 9.1.9)
+
+* Spread project
+
+** Research notes
+
+*** Bluetooth
+
+**** [[https://www.youtube.com/watch?v=jzxZUJmOu3o][buzzwordy video]] (that is ok to watch)
+
+**** https://en.wikipedia.org/wiki/Bluetooth
+
+**** [[https://docs.micropython.org/en/latest/library/ubluetooth.html][micropython docs]]
+
+**** Thoughts
+1. Range is shorter than wifi, but more suitable here
+2. Lower power consumption than wifi
+3. Can talk to serveral devices at once
+
+
+**** Open issues
+***** TODO Experiment with actual hardware
+***** TODO Verify wifi can't talk to several at once as well
+***** TODO Look into the handshake - maybe enough data there
+
+*** NTP
+The problem of syncing "phase difference" between several nodes in an
+ever changing graph is very similar to what NTP is solving.
+
+**** Read this first
+[[https://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_synchronization_algorithm][NTP clock sync algo from wikipedia]]
+
+**** [[https://twit.tv/shows/floss-weekly/episodes/350][excellent podcast episode about NTP]]
+
+**** https://en.wikipedia.org/wiki/Network_Time_Protocol (full article)
+
+**** [[https://en.wikipedia.org/wiki/Intersection_algorithm][NTP's algorithm]] (Not the best explanation)
+
+**** [[https://www.eecis.udel.edu/~mills/ntp/html/select.html][in depth explanation of algo]] - probably not our issue
+
+**** TODO Basic algorithm description
+1. find a peer
+2. send them a message, that has its *transmission time* (by your clock)
+3. peer gets the message, immediately adds its *reception time*
+4. (does whatever)
+5. peer sends a message back, with *transmission time*, *reception
+   time* and *response transmission time* (added just before sending
+   back).
+6. add to the response message you got the *response reception time*,
+   and calculate the offset and round-trip time from [[*Read this first]].
+7. consider repeating from 2 (with the same peer) if further accuracy
+   is required
+8. peer should now GOTO 2 and send a similar message to you. Respond..
+9. (maybe) both peers adjust their clocks to the be the same - adding
+   1/2 of the offset ("meeting in the middle").
+
+*** How to sync
+A basic simulation is hosted on
+https://metta-code.s3.eu-central-1.amazonaws.com/breathe/index.html
